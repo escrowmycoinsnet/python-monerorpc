@@ -78,7 +78,7 @@ def EncodeDecimal(o):
     raise TypeError(repr(o) + " is not JSON serializable.")
 
 
-class AuthServiceProxy(object):
+class MoneroAuthServiceProxy(object):
     """Extension of python-jsonrpc
     to communicate with Monero (monerod, monero-wallet-rpc)
     """
@@ -156,7 +156,7 @@ class AuthServiceProxy(object):
             raise AttributeError
         if self.__service_name is not None:
             name = f"{self.__service_name}.{name}"
-        return AuthServiceProxy(
+        return MoneroAuthServiceProxy(
             service_url=self.__service_url,
             service_name=name,
             connection=self.__conn,
@@ -171,10 +171,10 @@ class AuthServiceProxy(object):
         This is called on the object '__getattr__' returns.
         """
 
-        AuthServiceProxy.__id_count += 1
+        MoneroAuthServiceProxy.__id_count += 1
 
         log.debug(
-            f"-{AuthServiceProxy.__id_count}-> {self.__service_name} {json.dumps(args, default=EncodeDecimal)}"
+            f"-{MoneroAuthServiceProxy.__id_count}-> {self.__service_name} {json.dumps(args, default=EncodeDecimal)}"
         )
         # args is tuple
         # monero RPC always gets one dictionary as parameter
@@ -186,7 +186,7 @@ class AuthServiceProxy(object):
                 "jsonrpc": "2.0",
                 "method": self.__service_name,
                 "params": args,
-                "id": AuthServiceProxy.__id_count,
+                "id": MoneroAuthServiceProxy.__id_count,
             },
             default=EncodeDecimal,
         )
